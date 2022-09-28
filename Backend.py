@@ -30,12 +30,12 @@ def on_message_uidlookuprequest(client, userdata, msg):
 
     # [rows][columns]
     
-def load_current_permissions():
+def load_current_permissions(): # load currrent permissions from permissions.csv file
     with open('Permissions.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
-    return data
+    return data # and return them as a list
 
-def write_to_log(uid,currentowner):
+def write_to_log(uid,currentowner): # write the log info to the log file
     time = time.ctime()
     fields = [uid,time,currentowner]
     with open('log.csv', 'w', newline='') as csvfile:
@@ -59,9 +59,8 @@ client.loop_start()
 # stop the loop
 # client.loop_stop()
 
+#
 #   TO DO:
+#   - test: everything ^^
 #   - implement: check for already scannned in logs and give feedback ORANGE LIGHT / GREEN FLASHING LIGHT
-#
-#
-#
 #
