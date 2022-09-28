@@ -5,14 +5,16 @@ import csv
 
 # a callback function
 def on_message_uidlookuprequest(client, userdata, msg):
+    
     decoded_payload = msg.payload.decode('utf-8') # decode the payload uid
     permission_list = load_current_permissions() # load csv file into a list[][]
     print(permission_list) # print it for debugging
-    for i in len(permission_list):
+    
+    for i in range(len(permission_list)):
         if permission_list[i][0] == decoded_payload: # compare all uids to uid in decoded payload
             # if uid has been found
             if permission_list[i][3] == '1': # check if the uid also got the access bit linked
-                # if uid is related to Accessbit 1
+                # if uid is related to Accessbit 1: OPEN DOOR
                 write_to_log(permission_list[i][0],permission_list[i][2]) # write uid and ownername to log via write_to_log function
                 publish_message_answer('open door') # give answer via mqtt to open the door BLUE FLASHING LIGHT
                 print('door opened for', permission_list[i][2]) # debugging
