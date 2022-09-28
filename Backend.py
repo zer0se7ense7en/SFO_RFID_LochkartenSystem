@@ -1,23 +1,47 @@
+from math import perm
 import paho.mqtt.client as mqtt
 import time
 import csv
 
 # a callback function
 def on_message_uidlookuprequest(client, userdata, msg):
-    decoded_payload = msg.payload.decode('utf-8')
-    permission_array = load_current_permissions()
-    print(permission_array)
-    
+    decoded_payload = msg.payload.decode('utf-8') # decode the payload uid
+    permission_list = load_current_permissions() # load csv file into a list[][]
+    print(permission_list) # print it for debugging
+    for i in len(permission_list):
+        if permission_list[i][0] == decoded_payload: # compare all uids to uid in decoded payload
+            # if uid has been found
+            if permission_list[i][3] == '1': # check if the uid also got the access bit linked
+                # if uid is related to Accessbit 1
+                write_to_log(permission_list[i][0],permission_list[i][2]) # write uid and ownername to log via write_to_log function
+                publish_message_answer('open door') # give answer via mqtt to open the door BLUE FLASHING LIGHT
+                print('door opened for', permission_list[i][2]) # debugging
+            else: # otherwise just log the owner in the logfile
+                write_to_log(permission_list[i][0],permission_list[i][2]) # write uid and ownername to log via write_to_log function
+                publish_message_answer('uid validated') # feedback via mqtt for GREEN LED
+                print('valid uid presented', permission_list[i][0],permission_list[i][2]) # debugging
+                
+        else: # UID NOT FOUND
+            write_to_log('unknown UID','unknown owner') # write to logfile that an unkown card got scanned
+            publish_message_answer('uid not validated') # give answer via mqtt for RED LIGHT
+            print('unkown uid: ', decoded_payload) # debugging
+
+    # [rows][columns]
     
 def load_current_permissions():
     with open('Permissions.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
     return data
 
-def publish_message(msg):
+def write_to_log(uid,currentowner):
+    time = time.ctime()
+    fields = [uid,time,currentowner]
+    with open('log.csv', 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(fields)
+
+def publish_message_answer(msg):
     client.publish('RFID/uidlookup/answer', payload=msg.encode('utf-8'), qos=0, retain=False)
-    info.wait_for_publish()
-    time.sleep(2)
 
 
 # Give a name to this MQTT client
@@ -32,3 +56,10 @@ client.loop_start()
     
 # stop the loop
 # client.loop_stop()
+
+#   TO DO:
+#   - implement: check for already scannned in logs and give feedback ORANGE LIGHT / GREEN FLASHING LIGHT
+#
+#
+#
+#

@@ -1,1 +1,4 @@
 UID,CardID,oLaFNamedesBesitzers,Accessbit
+123456,001,oLaFName01,0
+789ABC,002,oLaFName02,1
+DEF123,003,oLaFName03,0
