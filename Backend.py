@@ -52,7 +52,7 @@ client.message_callback_add('RFID/uidlookup/request', on_message_uidlookupreques
 
 
 # IP address of your MQTT broker, using ipconfig to look up it  
-client.connect('192.168.110.10', 1883)
+client.connect('localhost', 1883)
 client.subscribe('RFID/#')
 client.loop_start()
     
