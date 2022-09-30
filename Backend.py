@@ -47,15 +47,32 @@ def publish_message_answer(msg):
 
 
 # Give a name to this MQTT client
+broker = '192.168.110.10'
+port = 1883
+topic = "RIFD/#"
+client_id = f'python-mqtt-{random.randint(0, 1000)}'
 client = mqtt.Client('RFID_UID_Server')
 client.message_callback_add('RFID/uidlookup/request', on_message_uidlookuprequest)
 
 
 # IP address of your MQTT broker, using ipconfig to look up it  
-client.connect('localhost', 1883)
-client.subscribe('RFID/#')
-client.loop_start()
-    
+#client.connect('192.168.110.10', 1883)
+#client.subscribe('RFID/#')
+#client.loop_start()
+
+def connect_mqtt():
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+        else:
+            print("Failed to connect, return code %d\n", rc)
+    # Set Connecting Client ID
+    client = mqtt_client.Client(client_id)
+    client.username_pw_set(username, password)
+    client.on_connect = on_connect
+    client.connect(broker, port)
+    return client
+
 # stop the loop
 # client.loop_stop()
 
