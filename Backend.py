@@ -37,7 +37,7 @@ def load_current_permissions(): # load currrent permissions from permissions.csv
 
 def write_to_log(uid,currentowner): # write the log info to the log file
     time = time.ctime()
-    fields = [uid,time,currentowner]
+    fields = [time,uid,currentowner]
     with open('log.csv', 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(fields)
@@ -63,4 +63,4 @@ client.loop_start()
 #   TO DO:
 #   - test: everything ^^
 #   - implement: check for already scannned in logs and give feedback ORANGE LIGHT / GREEN FLASHING LIGHT
-#
+#   - better time format
