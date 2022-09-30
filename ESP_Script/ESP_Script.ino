@@ -1,4 +1,5 @@
 #include "EspMQTTClient.h"
+#include "Adafruit_PN532.h"
 
 EspMQTTClient client(
   "WifiSSID",
@@ -10,7 +11,9 @@ EspMQTTClient client(
 );
 
 
-void setup() {}
+
+void setup() {
+}
 
 void onConnectionEstablished() {
 
